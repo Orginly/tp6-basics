@@ -290,8 +290,8 @@ function substrAssign(string $str, string $strpos){
  * @return array
  */
 function get_dateran(array $dateran){
-    $dateran[0] = strtotime(date('Y-m-d 00:00:00',strtotime($dateran[0]))) * 1000;
-    $dateran[1] = strtotime(date('Y-m-d 23:59:59',strtotime($dateran[1]))) * 1000;
+    $dateran[0] = strtotime(date('Y-m-d 00:00:00', strtotime($dateran[0]))) * 1000;
+    $dateran[1] = strtotime(date('Y-m-d 23:59:59', strtotime($dateran[1]))) * 1000;
     return $dateran;
 }
 
@@ -422,4 +422,46 @@ function curlPost($url, $data = NULL, $json = false){
     }
     curl_close($curl);
     return json_decode($res, true);
+}
+
+/**
+ * Notes:Curl请求
+ * @param string $url [url链接]
+ * @param array $data [参数]
+ * @param string $method [默认POST  GET|POST]
+ * @param bool $json
+ * @return int
+ */
+function curlRequest(string $url, array $data = [], string $method = 'POST', bool $json = false){
+    $ch = curl_init();                                //初始化CURL句柄
+    curl_setopt($ch, CURLOPT_URL, $url);              //设置请求的URL
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);      //设为TRUE把curl_exec()结果转化为字串，而不是直接输出
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method); //设置请求方式
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);  //跳过https验证
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    if ($method == 'POST' && !empty($data)) {
+        if ($json && is_array($data)) {
+            $data = json_encode($data);
+        }
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        if ($json) { //发送JSON数据
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_HTTPHEADER,
+                array(
+                    'Content-Type: application/json; charset=utf-8',
+                    'Content-Length:'.strlen($data))
+            );
+        }
+    } else {
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-HTTP-Method-Override: $method"));//设置HTTP头信息
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);                                   //设置提交的字符串
+    }
+    $result  = curl_exec($ch);//执行预定义的CURL
+    $errorno = curl_errno($ch);
+    if ($errorno) {
+        return $errorno;
+    }
+    curl_close($ch);
+    return $result;
 }

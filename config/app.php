@@ -18,7 +18,8 @@ return [
     // 应用映射（自动多应用模式有效）
     'app_map'          => [
         'admin_api' => 'admin',
-        'chat_api' => 'chat'
+        'chat_api' => 'chat',
+        'mini_api' => 'mini'
     ],
     // 域名绑定（自动多应用模式有效）
     'domain_bind'      => [],

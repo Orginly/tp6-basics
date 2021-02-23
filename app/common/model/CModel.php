@@ -32,7 +32,20 @@ class CModel extends Model
     }
 
     /**
-     * Notes:重写create函数增加创建时间、更新时间
+     * Notes:重写update函数增加更新时间
+     * @param array $data
+     * @param array $where
+     * @param array $allowField
+     * @param string $suffix
+     * @return CModel
+     */
+    public static function update(array $data, $where = [], array $allowField = [], string $suffix = ''){
+        $data['update_time'] = isset($data['create_time']) ? : msectime();
+        return parent::update($data, $where, $allowField, $suffix);
+    }
+
+    /**
+     * Notes:重写create函数增加创建时间
      * @param array $data
      * @param array $allowField
      * @param bool $replace

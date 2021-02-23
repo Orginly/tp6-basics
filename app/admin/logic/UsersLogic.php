@@ -57,9 +57,7 @@ class UsersLogic
             if (!empty($u_info)) {
                 return return_fail(1102);//手机号已被占用
             }
-            $username   = sp_random_code('T');//生成随机用户名
-            $orange_key = sp_random_string(); //生成随机邀请码
-            $result     = CUsersLogic::registerUser($mobile, $mobile_area, $username, $orange_key, $password, $nickname);
+            $result = CUsersLogic::registerUser($mobile, $mobile_area, $password, $nickname);
             if (!$result) {
                 return return_fail(1119);
             }

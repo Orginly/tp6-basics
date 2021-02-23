@@ -17,24 +17,25 @@ class CUsersLogic
      * Notes:统一注册账户
      * @param string $mobile [手机号]
      * @param string $mobile_area [手机区域]
-     * @param string $username [用户名]
-     * @param string $orange_key [推荐码]
      * @param string $password [密码]
-     * @param string $nickname
+     * @param string $nickname [昵称]
+     * @param string $openid [openid可为空]
      * @return bool|null [true成功、false失败]
      */
-    public static function registerUser(string $mobile, string $mobile_area, string $username, string $orange_key, string $password, string $nickname = ''){
+    public static function registerUser(string $mobile, string $mobile_area, string $password, string $nickname = '', string $openid = ''){
         try {
-            $data   = [
+            $orange_key = sp_random_string(); //生成随机邀请码
+            $data       = [
+                'open_id'     => $openid,
                 'mobile'      => $mobile,
                 'mobile_area' => $mobile_area,
-                'username'    => $username,
+                'username'    => sp_random_code('T'),//生成随机用户名
                 'password'    => sp_password($password, $orange_key),
-                'orange_key'  => $orange_key,
+                'orange_key'  => sp_random_string(), //生成随机邀请码,
                 'nickname'    => $nickname,
                 'status'      => 1,
             ];
-            $result = \app\common\model\CUsers::create($data);
+            $result     = \app\common\model\CUsers::create($data);
             if (!$result) {
                 setErrLog('统一注册用户失败'.json_encode($data));
                 return false;

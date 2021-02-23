@@ -10,6 +10,7 @@
 return [
     'user_redis'      => 'user_info', //用户信息的redis缓存
     'api_login_redis' => 'api_token', //登录记录redis缓存
+    'session_key'     => 'wx_session_key', //微信session会话密钥
     'api_out_auth'    => ['user/login',], //接口无需鉴权的路由(与路由文件里对应,区分大小写)
     'payment_type'    => [0 => '系统币种', 1 => '银行卡支付', 2 => '微信支付', 3 => '支付宝支付'], //订单支付方式
     'first'           => 'U', //编号首字母
@@ -21,5 +22,10 @@ return [
         'select'   => env('redis.select'),
         'timeout'  => env('redis.timeout'),
         'pre'      => env('redis.pre') //redis记录头部标识(按项目更改)
+    ],
+    'mini'            => [
+        // 小程序账号 womaidan@sohu.com 密码 Qq112211
+        'app_id'     => 'wxe30563fe3d2f6d6e',
+        'app_secret' => 'a9667d92e1eadaa733489170d3f94215'
     ],
 ];
